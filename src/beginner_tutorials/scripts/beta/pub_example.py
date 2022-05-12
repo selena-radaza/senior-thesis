@@ -1,3 +1,4 @@
+# Publishing Joint State values based off of what was recorded by the parser.
 import rospy
 from std_msgs.msg import String
 from std_msgs.msg import Float32
