@@ -1,0 +1,2 @@
+beginner_tutorials
+-DCATKIN_DEVEL_PREFIX=/mnt/c/Users/icyan/Documents/Thesis/ctw/devel -DCMAKE_INSTALL_PREFIX=/mnt/c/Users/icyan/Documents/Thesis/ctw/install -G Unix Makefiles

@@ -1,0 +1,130 @@
+import rospy
+import numpy as np
+from std_msgs.msg import String
+from std_msgs.msg import Float32
+from std_msgs.msg import Float32MultiArray
+from sensor_msgs.msg import JointState
+from std_msgs.msg import Header
+from geometry_msgs.msg import Pose, Point, Quaternion
+
+# Starting Pose
+upper_start = Pose()
+upper_start.position = Point(-0.2, 1.18, 0)
+upper_start.orientation = Quaternion(-.502, 1.635, 39.62, 1)
+
+lower_start = Pose()
+lower_start.position = Point(0, 2.12, 0)
+lower_start.orientation = Quaternion(65, 0.225, 0.316, 1)
+
+#Halfway Pose
+upper_middle = Pose()
+upper_middle.position = Point(-0.2, 1.6, 0)
+upper_middle.orientation = Quaternion(-0.502, 30, -39.621, 1)
+
+lower_middle = Pose()
+lower_middle.position = Point(0, 2.12, 0)
+lower_middle.orientation = Quaternion(90, 0.225, 0, 1)
+
+# End Pose
+upper_end = Pose()
+upper_end.position = Point(-0.2, 1.6, 0)
+upper_end.orientation = Quaternion(50, 0.225, -40, 1)
+
+lower_end = Pose()
+lower_end.position = Point(0, 2.12, 0)
+lower_end.orientation = Quaternion(90, 0.225, 0, 1)
+
+def numpy_to_point(nparray):
+    ret = list(nparray)
+    p = Point(ret[0], ret[1], ret[2])
+    return p
+
+def numpy_to_qt(nparray):
+    ret = list(nparray)
+    q = Quaternion(ret[0], ret[1], ret[2], 1)
+    return q
+
+def point_to_np(p):
+    l = [p.x, p.y, p.z]
+    npa = np.array(l)
+    return npa
+
+def qt_to_np(qt):
+    l = [qt.x, qt.y, qt.z, qt.w]
+    npa = np.array(l)
+    return npa
+
+# Start Pose:  Where limb starts
+# End Pose:  Where limb is after movement
+# Segment:  0 for upper, 1 for lower
+# Return:  (List of Poses, Segment)
+def move(start_pose, end_pose, segment):
+    pos_diff = point_to_np(end_pose.position) - point_to_np(start_pose.position)
+    or_diff =  qt_to_np(end_pose.orientation) - qt_to_np(end_pose.orientation)
+    # pos_diff = list((np.array(end_pose.position)) - (np.array(start_pose.position))
+    # or_diff = list(np.array(end_pose.orientation) - np.array(start_pose.orientation))
+    cur_pose = start_pose
+    pos_inc = np.array(pos_diff) / 30
+    or_inc = np.array(or_diff) / 30
+
+    poses = [start_pose]
+
+    # for incremental movement?
+    for i in range(30):
+        cur_pose.position.x += pos_inc[0]
+        cur_pose.position.y += pos_inc[1]
+        cur_pose.position.z += pos_inc[2]
+
+        cur_pose.orientation.x += or_inc[0]
+        cur_pose.orientation.y += or_inc[1]
+        cur_pose.orientation.z += or_inc[2]
+        # cur_pose.position = numpy_to_point(cur_pose.position)
+        # cur_pose.orientation = numpy_to_qt(cur_pose.orientation)
+        poses.append(cur_pose)
+    return (poses, segment)
+
+
+def talker():
+
+    #Publisher for upper arm
+    pub_upper = rospy.Publisher('/upper_arm', Pose, queue_size=10)
+    rospy.init_node('arm_talker', anonymous=True)
+    rate = rospy.Rate(10)
+
+    #Publisher for lower arm
+    pub_lower = rospy.Publisher('/lower_arm', Pose, queue_size=10)
+    rate = rospy.Rate(10)
+
+    # Get Poses for first part of movement
+    upper_movement1 = move(upper_start, upper_middle, 0)
+    lower_movement1 = move(lower_start, lower_middle, 1)
+
+    upper_poses = upper_movement1[0]
+    lower_poses = lower_movement1[0]
+
+    for i in range(0, len(upper_poses)):
+        rospy.loginfo("Upper arm: %s", upper_poses[i])
+        pub_upper.publish(upper_poses[i])
+        rospy.loginfo("Lower arm: %s", lower_poses[i])
+        pub_lower.publish(lower_poses[i])
+
+    # # Publish poses for Upper movement 1
+    # for p in upper_poses:
+    #     rospy.loginfo(p)
+    #     pub_upper.publish(p)
+    #     pub_lower.publish(p)
+    #     rate.sleep()
+    #
+    # # # Publish poses for Lower movement 1
+    # # for p in lower_poses:
+    # #     rospy.loginfo(p)
+    # #     pub_lower.publish(p)
+    # #     rate.sleep()
+
+
+if __name__ == '__main__':
+
+    try:
+        talker()
+    except rospy.ROSInterruptException:
+        pass
