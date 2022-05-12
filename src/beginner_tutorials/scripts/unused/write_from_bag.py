@@ -1,3 +1,4 @@
+#Writes state values based off of what is heard from a rosbag.
 import rospy
 from std_msgs.msg import String
 from std_msgs.msg import Float32

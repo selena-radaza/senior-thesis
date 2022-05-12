@@ -1,3 +1,6 @@
+# For hard-coded movements for an arm.  The joint is given a
+# starting pose, the apex of the pose, and the ending Pose.
+# Used in initial phases of learning Unity.
 import rospy
 import numpy as np
 from std_msgs.msg import String
@@ -34,21 +37,25 @@ lower_end = Pose()
 lower_end.position = Point(0, 2.12, 0)
 lower_end.orientation = Quaternion(90, 0.225, 0, 1)
 
+# Converts a numpy array to a point.
 def numpy_to_point(nparray):
     ret = list(nparray)
     p = Point(ret[0], ret[1], ret[2])
     return p
 
+# Converts a numpy array to a quaternion.
 def numpy_to_qt(nparray):
     ret = list(nparray)
     q = Quaternion(ret[0], ret[1], ret[2], 1)
     return q
 
+# Converts a point to a numpy array.
 def point_to_np(p):
     l = [p.x, p.y, p.z]
     npa = np.array(l)
     return npa
 
+# Converts a quaternion to a numpy array.
 def qt_to_np(qt):
     l = [qt.x, qt.y, qt.z, qt.w]
     npa = np.array(l)
@@ -71,7 +78,7 @@ def talker():
     #Publisher for lower arm
     pub_lower = rospy.Publisher('/lower_arm', Pose, queue_size=10)
     rate = rospy.Rate(10)
-    
+
 
     # Get Poses for first part of movement
     upper_movement1 = move(upper_start, upper_middle, 0)
@@ -93,5 +100,3 @@ if __name__ == '__main__':
         talker()
     except rospy.ROSInterruptException:
         pass
-
-#GameObject.find(name of object ex upper_right)

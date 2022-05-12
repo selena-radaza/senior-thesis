@@ -1,3 +1,4 @@
+# A Prototype of 32_to_pose.py before it was rewritten to be more object-oriented.
 import rospy
 import scipy
 import numpy as np

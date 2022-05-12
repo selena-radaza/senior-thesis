@@ -1,3 +1,4 @@
+# Pose testing.  Used for testing to make sure values are being received by Unity.
 import rospy
 import scipy
 import numpy as np
@@ -21,7 +22,6 @@ rate = rospy.Rate(10)
 error_val = 0.1
 
 def shoulder_callback(msg):
-    # Random value for human error
 
     p = Pose()
     p.orientation.x = msg.orientation.x

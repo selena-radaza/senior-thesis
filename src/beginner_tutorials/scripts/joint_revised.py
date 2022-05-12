@@ -67,8 +67,6 @@ class Joint_Math:
                 rot = T[:3, :3]
                 rq = R.from_matrix(rot)
 
-                # Try math
-                # Before:  inverse * rq * rotatex90
                 rq = rq * yumi_elbow_as_matrix_inverse * self.rotate_x(90) * self.rotate_y(90)
                 rq  = rq.as_quat()
 
@@ -77,13 +75,6 @@ class Joint_Math:
                 p.orientation.z = rq[2]
                 p.orientation.w = rq[3]
 
-                # if not self.firstUpdate:
-                #     if self.movement_too_big(p):
-                #         return
-
-                # p.position.x = pose[0]
-                # p.position.y = pose[1]
-                # p.position.z = pose[2]
 
                 self.cur_pose = p
                 self.firstUpdate = False
@@ -123,7 +114,6 @@ class Joint_Math:
 
 
             # Apply both rotations
-            # Rotate y is alpha
             rotation = j2_rot * j1_rot
             rq = rotation.as_quat()
 
@@ -134,7 +124,7 @@ class Joint_Math:
 
             # Fake human difference
             if is_human:
-                p.orientation.z += 0.0
+                p.orientation.z += 0.1
 
             self.cur_pose = p
             self.firstUpdate = False

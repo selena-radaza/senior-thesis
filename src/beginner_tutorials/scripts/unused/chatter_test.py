@@ -1,3 +1,4 @@
+# Chatter test for publishing poses based on position.  Used for debugging.
 import rospy
 from std_msgs.msg import String
 from std_msgs.msg import Float32

@@ -1,3 +1,6 @@
+# Parses values taken from a given rosbag (JointStates) and stores them in a text file.
+# Used for initial testing when trying to get YuMi simulation to move in Rviz.
+
 import rospy
 from std_msgs.msg import String
 from std_msgs.msg import Float32
@@ -11,7 +14,7 @@ pub = None
 states_list = []
 i = 0
 
-
+# Converts a list of strings to a list of floats.
 def convert_to_float(str_list):
     res = []
     for s in str_list:
@@ -19,6 +22,7 @@ def convert_to_float(str_list):
         res.append(f)
     return res
 
+# Parses text file
 def parse_lines(lines):
     i = 0
     while i < len(lines):
@@ -43,8 +47,6 @@ def parse_lines(lines):
             i += 1
 
 
-# Based on code from
-# https://answers.ros.org/question/213075/publish-joint_state-with-python-to-rviz/
 # Only need to publish velocity, not position and effort
 def pub_movement(msg):
 
@@ -69,26 +71,6 @@ def pub_movement(msg):
     vel_msg.data = velocity
 
     pub.publish(vel_msg)
-
-        # js_msg = JointState()
-        # js_msg.header = Header()
-        # js_msg.header.stamp = rospy.Time.now()
-        # js_msg.name = ['yumi_joint_1_r', 'yumi_joint_2_r', 'yumi_joint_7_r',
-        # 'yumi_joint_3_r', 'yumi_joint_4_r', 'yumi_joint_5_r', 'yumi_joint_6_r',
-        # 'gripper_r_joint', 'yumi_joint_1_l', 'yumi_joint_2_l', 'yumi_joint_7_l',
-        # 'yumi_joint_3_l', 'yumi_joint_4_l', 'yumi_joint_5_l', 'yumi_joint_6_l',
-        # 'gripper_l_joint']
-        # js_msg.position = st.position
-        # js_msg.velocity = st.velocity
-        # js_msg.effort = st.effort
-        # pub.publish(js_msg)
-        # rate.sleep()
-
-# def callback(data):
-#     cur_state = State(data.position, data.velocity, data.effort)
-#     states_list.append(cur_state)
-#     rospy.loginfo(rospy.get_caller_id() + "I heard %s %s %s\n\n\n",
-#     data.position, data.velocity, data.effort)
 
 if __name__ == '__main__':
 

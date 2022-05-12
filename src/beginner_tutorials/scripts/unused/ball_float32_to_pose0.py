@@ -1,3 +1,4 @@
+# Prototype for joint class before it was rewritten to be more object-oriented.
 import rospy
 import scipy
 import numpy as np
@@ -138,16 +139,12 @@ def clavicle_r_callback(msg):
         T = np.reshape(np.array(data, dtype=Float32), (4, 4))
         p = Pose()
 
-        #print("T: ", T)
-
         # T is transform matrix
         pose = T[:4,3] # Position data
         rot = T[:3, :3] # Rotation data
         rq = R.from_matrix(rot)
         rq = rq.as_quat()
 
-
-        #print("\nRq as quat: ", rq)
         p.orientation.x = rq[0]
         p.orientation.y = rq[1]
         p.orientation.z = rq[2]
@@ -164,20 +161,17 @@ def clavicle_r_callback(msg):
         p.position.z = pose[2]
 
         set_cur_pose_clavicle_r(p)
-        # pub_clavicle_r.publish(p)
         set_first_update_clavicle_r(False)
         #
 
 ## RIGHT ARM ##
 def upper_r_callback(msg):
-    #print("called back\n");
     data = msg.data
 
     if (len(data) != 0):
         T = np.reshape(np.array(data, dtype=Float32), (4, 4))
         p = Pose()
 
-        #print("T: ", T)
 
         # T is transform matrix
         pose = T[:4,3] # Position data
@@ -204,8 +198,7 @@ def upper_r_callback(msg):
 
 
         set_cur_pose_upper_r(p)
-        # ball_joint = p.orientation * get_cur_pose_upper_r().orientation
-        # p.orientation = ball_joint
+
         pub_upper_r.publish(p)
         set_first_update_upper_r(False)
 

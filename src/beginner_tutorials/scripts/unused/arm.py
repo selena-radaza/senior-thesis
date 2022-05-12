@@ -1,3 +1,4 @@
+# Arm object, no longer in use after being rewritten as Joint class.
 import rospy
 import scipy
 import threading

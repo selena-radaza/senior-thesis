@@ -1,3 +1,5 @@
+# For the purpose of testing the left arm.  Left arm is not currently
+# used in the project.
 import rospy
 import numpy as np
 from std_msgs.msg import String
@@ -61,8 +63,6 @@ def qt_to_np(qt):
 def move(start_pose, end_pose, segment):
     pos_diff = point_to_np(end_pose.position) - point_to_np(start_pose.position)
     or_diff =  qt_to_np(end_pose.orientation) - qt_to_np(end_pose.orientation)
-    # pos_diff = list((np.array(end_pose.position)) - (np.array(start_pose.position))
-    # or_diff = list(np.array(end_pose.orientation) - np.array(start_pose.orientation))
     cur_pose = start_pose
     pos_inc = np.array(pos_diff) / 30
     or_inc = np.array(or_diff) / 30
@@ -78,8 +78,6 @@ def move(start_pose, end_pose, segment):
         cur_pose.orientation.x += or_inc[0]
         cur_pose.orientation.y += or_inc[1]
         cur_pose.orientation.z += or_inc[2]
-        # cur_pose.position = numpy_to_point(cur_pose.position)
-        # cur_pose.orientation = numpy_to_qt(cur_pose.orientation)
         poses.append(cur_pose)
     return (poses, segment)
 
@@ -107,19 +105,6 @@ def talker():
         pub_upper.publish(upper_poses[i])
         rospy.loginfo("Lower arm: %s", lower_poses[i])
         pub_lower.publish(lower_poses[i])
-
-    # # Publish poses for Upper movement 1
-    # for p in upper_poses:
-    #     rospy.loginfo(p)
-    #     pub_upper.publish(p)
-    #     pub_lower.publish(p)
-    #     rate.sleep()
-    #
-    # # # Publish poses for Lower movement 1
-    # # for p in lower_poses:
-    # #     rospy.loginfo(p)
-    # #     pub_lower.publish(p)
-    # #     rate.sleep()
 
 
 if __name__ == '__main__':

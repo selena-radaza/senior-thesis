@@ -1,3 +1,4 @@
+# Testing the functionality of Pose topic.
 import rospy
 import numpy as np
 from std_msgs.msg import String

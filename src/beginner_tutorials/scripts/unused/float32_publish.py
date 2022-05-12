@@ -1,3 +1,5 @@
+# Used for testing purposes.  Checking to see if Float32MultiArray
+# values are being sent to the proper topics.
 import rospy
 import numpy as np
 from std_msgs.msg import String

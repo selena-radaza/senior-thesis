@@ -1,3 +1,4 @@
+# Main file for communication between ROS topics.
 import rospy
 import scipy
 import numpy as np
@@ -8,18 +9,18 @@ from sensor_msgs.msg import JointState
 from std_msgs.msg import Header
 from geometry_msgs.msg import Pose, Point, Quaternion, Transform
 from joint import Joint
-from joint_matrix_math import Joint_Math
+from joint_revised import Joint_Revised
 from scipy.spatial.transform import Rotation as R
 
 rospy.init_node('talker', anonymous=True)
 rate = rospy.Rate(10)
 
 def listener():
-    shoulder = Joint_Math('/j1r', '/j2r', '/upper_arm_r', 'shoulder', False)
-    human_shoulder = Joint_Math('/j1r', '/j2r', '/human_upper_arm_r', 'human_shoulder', True)
+    shoulder = Joint_Revised('/j1r', '/j2r', '/upper_arm_r', 'shoulder', False)
+    human_shoulder = Joint_Revised('/j1r', '/j2r', '/human_upper_arm_r', 'human_shoulder', True)
 
-    elbow = Joint_Math('/j4r', '', '/lower_arm_r', 'elbow', False)
-    human_elbow = Joint_Math('/j4r', '', '/human_lower_arm_r', 'human_elbow', True)
+    elbow = Joint_Revised('/j4r', '', '/lower_arm_r', 'elbow', False)
+    human_elbow = Joint_Revised('/j4r', '', '/human_lower_arm_r', 'human_elbow', True)
 
     rospy.spin()
 
