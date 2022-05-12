@@ -1,3 +1,4 @@
+# Sending a rotation around a specified axis.  Used to determine how rotations appear in Unity.
 import rospy
 import scipy
 import math

@@ -1,3 +1,4 @@
+# Human model Float32MultiArray to Pose.  Was rewritten as Joint for better object oriented programming.
 import rospy
 import scipy
 import numpy as np

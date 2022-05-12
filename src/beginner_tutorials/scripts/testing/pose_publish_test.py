@@ -1,3 +1,4 @@
+# Testing pose publishing with Unity.
 import rospy
 import numpy as np
 from std_msgs.msg import String
