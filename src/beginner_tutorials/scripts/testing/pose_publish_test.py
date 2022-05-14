@@ -13,9 +13,9 @@ def increment(p):
     p.orientation.y += 0.1
     p.orientation.z += 0.1
 
-    p.position.x += 0.1;
-    p.position.y += 0.1;
-    p.position.z += 0.1;
+    p.position.x += 1;
+    p.position.y += 1;
+    p.position.z += 1;
     return p
 
 def log_pub(pose, publisher, rate):

@@ -12,7 +12,8 @@ from geometry_msgs.msg import Pose, Point, Quaternion, Transform
 shoulder_pub = rospy.Publisher('/upper_arm_r', Pose, queue_size=10)
 elbow_pub = rospy.Publisher('/lower_arm_r', Pose, queue_size=10)
 rospy.init_node('talker', anonymous=True)
-
+rate = rospy.Rate(100)
+poses_created = 0
 
 
 def parse(labels, vals):
@@ -89,16 +90,15 @@ def get_first_for_all(dict):
 
 def create_pose(tup):
     p = Pose()
-    p.position.x = tup[0]
-    p.position.y = tup[1]
-    p.position.z = tup[2]
+    p.position.x = tup[0] * .01
+    p.position.y = tup[1] * .01
+    p.position.z = tup[2] * .01
 
     return p
 
 def pub_moves(dict):
 
     num_moves = len(dict['CV7'])
-    print(num_moves)
 
 
     for i in range(0, num_moves):
@@ -108,6 +108,7 @@ def pub_moves(dict):
         elbow_pose = create_pose(elbow_pos_tup)
         shoulder_pub.publish(shoulder_pose)
         elbow_pub.publish(elbow_pose)
+        rate.sleep()
 
 
 if __name__ == '__main__':
