@@ -27,6 +27,8 @@ def parse(labels, vals):
     tuples_list = []
     master_vals_list = []
 
+    num_labels = len(labels_list)
+
     # Key: label.  Value:  list of tuples
     dict = {}
 
