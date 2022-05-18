@@ -8,7 +8,6 @@ from std_msgs.msg import Float32MultiArray
 from sensor_msgs.msg import JointState
 from std_msgs.msg import Header
 from geometry_msgs.msg import Pose, Point, Quaternion, Transform
-from joint import Joint
 from joint_revised import Joint_Revised
 from scipy.spatial.transform import Rotation as R
 

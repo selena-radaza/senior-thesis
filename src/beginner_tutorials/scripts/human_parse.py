@@ -1,6 +1,5 @@
 # Parse human values from TSV files
 import numpy as np
-from point import Point
 import matplotlib
 from mpl_toolkits import mplot3d
 import matplotlib.pyplot as plt
@@ -8,19 +7,22 @@ import os
 import rospy
 from geometry_msgs.msg import Pose, Point, Quaternion, Transform
 
-
+# Publisher for the shoulder
 shoulder_pub = rospy.Publisher('/upper_arm_r', Pose, queue_size=10)
+
+# Publisher for the elbow
 elbow_pub = rospy.Publisher('/lower_arm_r', Pose, queue_size=10)
+
+# Publisher for the wrist
+wrist_pub = rospy.Publisher('/right_wrist_r', Pose, queue_size=10)
+
 rospy.init_node('talker', anonymous=True)
-rate = rospy.Rate(100)
-poses_created = 0
+rate = rospy.Rate(200)
 
-
+# Parse tsv input file.
 def parse(labels, vals):
     labels_list = labels.strip().split("\t")
     labels_list = labels_list[1:]
-
-    num_labels = len(labels_list)
 
     tuples_list = []
     master_vals_list = []
@@ -28,14 +30,19 @@ def parse(labels, vals):
     # Key: label.  Value:  list of tuples
     dict = {}
 
+    # Get each row of text
     for row in vals:
+        # Clean up white space
         row = row.strip().split("\t")
         vals_list = []
+        # Get each val, put in a list
+        # Store each list in a master list
         for val in row:
             val = float(val)
             vals_list.append(val)
         master_vals_list.append(vals_list)
 
+    # Get xyz values as a tuple
     for list in master_vals_list:
         for i in range(0, len(list)):
             if i % 3 == 0:
@@ -44,7 +51,7 @@ def parse(labels, vals):
                 tuples_list.append(temp)
 
 
-
+    # Pair tuples with proper labels
     for i in range(0, len(tuples_list)):
         label = labels_list[i % num_labels - 1]
         tup = tuples_list[i]
@@ -90,12 +97,13 @@ def get_first_for_all(dict):
 
 def create_pose(tup):
     p = Pose()
-    p.position.x = tup[0] * .01
-    p.position.y = tup[1] * .01
-    p.position.z = tup[2] * .01
+    p.position.x = tup[0] * .01 / 4
+    p.position.y = tup[1] * .01 / 4
+    p.position.z = tup[2] * .01 / 4
 
     return p
 
+# Publish movements
 def pub_moves(dict):
 
     num_moves = len(dict['CV7'])
@@ -104,10 +112,15 @@ def pub_moves(dict):
     for i in range(0, num_moves):
         shoulder_pos_tup = dict['R_SAE'][i]
         elbow_pos_tup = dict['R_HUM'][i]
+        wrist_pos_tup = dict['R_FAR'][i]
+
         shoulder_pose = create_pose(shoulder_pos_tup)
         elbow_pose = create_pose(elbow_pos_tup)
+        wrist_pose = create_pose(wrist_pos_tup)
+
         shoulder_pub.publish(shoulder_pose)
         elbow_pub.publish(elbow_pose)
+        wrist_pub.publish(wrist_pose)
         rate.sleep()
 
 
